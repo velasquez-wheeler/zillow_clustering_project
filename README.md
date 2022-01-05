@@ -17,10 +17,18 @@ In this project, you are going to predict the logerror for the year 2017.
 
 ## Initial Questions
 
-- 
-- 
-- 
-- 
+- What can we cluster?
+    - bed/bath/sqft
+    - lat/long/age/fips/acres
+    - structuretax/taxvaluedollar/landtax/taxamount/acres
+    - acres/sqft
+    - bed/bath/taxvalue
+- What drives logerror?
+    - Bed/bath/sqft Clusters
+    - Bedroom count
+    - Bathroom count
+    - Finished sqft
+    - FIPS
 
 ## Data Dictionary
 
@@ -53,10 +61,18 @@ Functions to acquire, clean, tidy, prepare, split, and scale the data for use.
 
 ### Explore
 #### Ask Questions
-1. 
-2. 
-3. 
-4. 
+- What can we cluster?
+    1. bed/bath/sqft
+    2. lat/long/age/fips/acres
+    3. structuretax/taxvaluedollar/landtax/taxamount/acres
+    4. acres/sqft
+    5. bed/bath/taxvalue
+- What drives logerror?
+    1. Bed/bath/sqft Clusters
+    2. Bedroom count
+    3. Bathroom count
+    4. Finished sqft
+    5. FIPS
 
 #### Visualizations
 - Matplotlib and Seaborn used to create visualizations

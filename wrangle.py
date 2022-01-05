@@ -86,28 +86,6 @@ def drop_cols(df, cols_to_drop):
     df.drop(columns = cols_to_drop, inplace = True)
     return df
 
-def wrangle_zillow():
-    # acquire df
-    df = get_zillow_data()
-    # only single family
-    df = df[df.propertylandusetypeid == 261]
-    # at least 1 bed and bath and 350 sqft
-    df = df[(df.bedroomcnt > 0) & (df.bathroomcnt > 0) & (df.calculatedfinishedsquarefeet>350)]
-    # handle missing values
-    df = handle_missing_values(df)
-    # drop unnecessary columns
-    df = drop_cols(df, ['id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt'])
-    # fill lotsize
-    df.lotsizesquarefeet.fillna(7313, inplace = True)
-    # properties under 5 million USD
-    df = df[df.taxvaluedollarcnt < 5_000_000]
-    # add counties
-    df['county'] = np.where(df.fips == 6037, 'Los_Angeles',np.where(df.fips == 6059, 'Orange', 'Ventura'))  
-    # catch other nulls
-    df.dropna(inplace=True)
-    # return wrangled df
-    return df
- 
     
 ####### Prepare ########    
 
@@ -124,7 +102,7 @@ def min_max_scaler(train, valid, test):
     test[num_vars] = scaler.transform(test[num_vars])
     return scaler, train, valid, test
 
-def remove_outliers(df, k, col_list):
+def remove_outliers_iqr(df, k, col_list):
     ''' 
     Takes in a df, k, and list of columns returns
     a df with removed outliers
@@ -145,46 +123,50 @@ def remove_outliers(df, k, col_list):
         
     return df
 
+
+######## Wrangle ##########
+
+def wrangle_zillow():
+    # acquire df
+    df = get_zillow_data()
+    # only single family
+    df = df[df.propertylandusetypeid == 261]
+    # at least 1 bed and bath and 350 sqft
+    df = df[(df.bedroomcnt > 0) & (df.bathroomcnt > 0) & (df.calculatedfinishedsquarefeet>350)]
+    # handle missing values
+    df = handle_missing_values(df)
+    # fill lotsize
+    df.lotsizesquarefeet.fillna(7313, inplace = True)
+    # create acre feature
+    df['acres'] = df.lotsizesquarefeet/43560
+    # create age feature
+    df['age'] = 2017 - df.yearbuilt
+    # drop unnecessary columns
+    df = drop_cols(df, ['id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt','lotsizesquarefeet','assessmentyear','yearbuilt','rawcensustractandblock','roomcnt'])
+    # properties under 5 million USD
+    df = df[df.taxvaluedollarcnt < 5_000_000]
+    # add counties
+    df['county'] = np.where(df.fips == 6037, 'Los_Angeles',np.where(df.fips == 6059, 'Orange', 'Ventura'))  
+    # catch other nulls
+    df.dropna(inplace=True)
+    # remove outliers
+    df = df[((df.bathroomcnt <= 7) & (df.bedroomcnt <= 7) & 
+               (df.regionidzip < 100000) & 
+               (df.bathroomcnt >= 0) & 
+               (df.bedroomcnt > 0) & 
+               (df.acres < 6) &
+               (df.calculatedfinishedsquarefeet <= 5000)
+#                (df.taxrate < 10)
+              )]
+    # return wrangled df
+    return df
+ 
+
 ######## Split ########
 def split_data(df):
     '''
     Takes in a dataframe and returns train, validate, and test subset dataframes. 
     '''
-    train, test = train_test_split(df, test_size = .2, random_state = 222)
-    train, validate = train_test_split(train, test_size = .3, random_state = 222)
+    train, test = train_test_split(df, test_size = .2, random_state = 333)
+    train, validate = train_test_split(train, test_size = .3, random_state = 333)
     return train, validate, test
-
-
-
-
-#######
-
-def get_mall_customers(sql):
-	    url = get_connection('mall_customers')
-	    mall_df = pd.read_sql(sql, url, index_col='customer_id')
-	    return mall_df
-
-def wrangle_mall_df():
-    
-    # acquire data
-    sql = 'select * from customers'
-
-
-    # acquire data from SQL server
-    mall_df = get_mall_customers(sql)
-    
-    # handle outliers
-    mall_df = remove_outliers(mall_df, 1.5, ['age', 'spending_score', 'annual_income'])
-    
-    # get dummy for gender column
-    dummy_df = pd.get_dummies(mall_df.gender, drop_first=True)
-    mall_df = pd.concat([mall_df, dummy_df], axis=1).drop(columns = ['gender'])
-    mall_df.rename(columns= {'Male': 'is_male'}, inplace = True)
-    # return mall_df
-
-    # split the data in train, validate and test
-    train, test = train_test_split(mall_df, train_size = 0.8, random_state = 123)
-    train, validate = train_test_split(train, train_size = 0.75, random_state = 123)
-    
-#     return min_max_scaler, train, validate, test
-    return mall_df
