@@ -155,11 +155,13 @@ def wrangle_zillow():
     df.dropna(inplace=True)
     # remove outliers
     df = df[((df.bathroomcnt <= 7) & (df.bedroomcnt <= 7) & 
-               (df.regionidzip < 100000) & 
-               (df.bathroomcnt >= 0) & 
-               (df.bedroomcnt > 0) & 
-               (df.acres < 6) &
-               (df.calculatedfinishedsquarefeet <= 5000)
+            (df.regionidzip < 100000) & 
+            (df.bathroomcnt >= 0) & 
+            (df.bedroomcnt > 0) &
+            (df.taxamount < 15000) &
+            # (df.structuretaxvaluedollarcnt < 2000000) &
+            (df.acres < 1.5) &
+            (df.calculatedfinishedsquarefeet <= 4000)
 #                (df.taxrate < 10)
               )]
     # return wrangled df
