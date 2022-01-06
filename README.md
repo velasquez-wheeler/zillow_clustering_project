@@ -69,6 +69,7 @@ Wrap up all of the testing conclusions
 
 ### Clustering
 
+Use sklearn cluster KMeans
 
 ### Modeling
 #### Select Evaluation Metric
