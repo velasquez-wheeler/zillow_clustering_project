@@ -89,18 +89,23 @@ def drop_cols(df, cols_to_drop):
     
 ####### Prepare ########    
 
-def min_max_scaler(train, valid, test):
+def min_max_scaler(train, validate, test):
     '''
     Uses the train & test datasets created by the split_my_data function
     Returns 3 items: mm_scaler, train_scaled_mm, test_scaled_mm
     This is a linear transformation. Values will lie between 0 and 1
     '''
-    num_vars = list(train.select_dtypes('number').columns)
+    scaled_vars = list(train.select_dtypes('number').columns)
+    scaled_column_names = [i for i in scaled_vars]
     scaler = MinMaxScaler(copy=True, feature_range=(0,1))
-    train[num_vars] = scaler.fit_transform(train[num_vars])
-    valid[num_vars] = scaler.transform(valid[num_vars])
-    test[num_vars] = scaler.transform(test[num_vars])
-    return scaler, train, valid, test
+    train_scaled = scaler.fit_transform(train[scaled_vars])
+    validate_scaled = scaler.transform(validate[scaled_vars])
+    test_scaled = scaler.transform(test[scaled_vars])
+
+    train_scaled = pd.DataFrame(train_scaled, columns=scaled_column_names, index=train.index.values)
+    validate_scaled = pd.DataFrame(validate_scaled, columns=scaled_column_names, index=validate.index.values)
+    test_scaled = pd.DataFrame(test_scaled, columns=scaled_column_names, index= test.index.values)
+    return scaler, train_scaled, validate_scaled, test_scaled
 
 def remove_outliers_iqr(df, k, col_list):
     ''' 
