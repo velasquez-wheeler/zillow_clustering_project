@@ -145,6 +145,10 @@ def wrangle_zillow():
     df['acres'] = df.lotsizesquarefeet/43560
     # create age feature
     df['age'] = 2017 - df.yearbuilt
+    # create $/sqft
+    df['dollar_per_sqft'] = df.structuretaxvaluedollarcnt/df.calculatedfinishedsquarefeet
+    # create $/acre
+    df['dollar_per_acre'] = df.landtaxvaluedollarcnt/df.acres
     # drop unnecessary columns
     df = drop_cols(df, ['id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt','lotsizesquarefeet','assessmentyear','yearbuilt','rawcensustractandblock','roomcnt'])
     # properties under 5 million USD
