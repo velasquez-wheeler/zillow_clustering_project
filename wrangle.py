@@ -91,9 +91,8 @@ def drop_cols(df, cols_to_drop):
 
 def min_max_scaler(train, validate, test):
     '''
-    Uses the train & test datasets created by the split_my_data function
-    Returns 3 items: mm_scaler, train_scaled_mm, test_scaled_mm
-    This is a linear transformation. Values will lie between 0 and 1
+    Takes train, validate, and test dataframes as arguments and returns
+    min-max scaler object and scaled versions of train, validate, and test.
     '''
     scaled_vars = list(train.select_dtypes('number').columns)
     scaled_column_names = [i for i in scaled_vars]
