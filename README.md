@@ -34,7 +34,36 @@ In this project, you are going to predict the logerror for the year 2017.
 
 | variable      | meaning       |
 | ------------- |:-------------:|
-|insert label|insert description|
+|logerror|target value: log(zestimate) - log(sale price)
+|lm|Ordinary Least Squares Linear Regression modeling algorithm|
+|lm2|Polynomial Regression modeling algorithm |
+|lars|Lasso + Lars Regression modeling algorithm|
+|glm|TweedieRegressor modeling algorithm|
+|df|Dataframe of raw zillow data from sql server|
+|train| training dataset, a major cut from the df|
+|validate| validate dataset, used to prevent overfitting|
+|test| test dataset, to test the top model on unseen data|
+|pearsonr| statistical test used to compare churn with various categories|
+|taxvaluedollarcnt| The assessed value of the built structure on the parcel|
+|calculatedfinishedsquarefeet| Calculated total finished living area of the home |
+|structuretaxvaluedollarcnt| assessed value of the structure|
+|landtaxvaluedollarcnt|assessed value of the land|
+|taxamount|total property tax assessed for that year|
+|bedroomcnt| Number of bedrooms in home |
+|bathroomcnt| Number of bathrooms in home including fractional bathrooms|
+|latitude/longitude| coordinates of the property|
+|acres| lotsizesquarefeet / 43560|
+|age| 2017 - yearbuilt|
+|dollar_per_acre| landtaxvaluedollarcnt / acres|
+|dollar_per_sqft| structuretaxvaluedollarcnt / calculatedfinishedsquarefeet|
+|features_cluster|cluster created with features of the property|
+|value_cluster|cluster created with dollar features|
+|development_cluster|cluster created with location and age data|
+|fips| County codes for property locations|
+| County Codes||
+|6037 | Los Angeles, CA|
+|6059 | Orange, CA|
+|6111 | Ventura, CA|
 
 
 ## Steps to Reproduce 
