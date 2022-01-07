@@ -150,7 +150,7 @@ def wrangle_zillow():
     # create $/acre
     df['dollar_per_acre'] = df.landtaxvaluedollarcnt/df.acres
     # drop unnecessary columns
-    df = drop_cols(df, ['id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt','lotsizesquarefeet','assessmentyear','yearbuilt','rawcensustractandblock','roomcnt'])
+    df = drop_cols(df, ['parcelid','id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt', 'lotsizesquarefeet', 'assessmentyear','yearbuilt', 'rawcensustractandblock','roomcnt'])
     # properties under 5 million USD
     df = df[df.taxvaluedollarcnt < 5_000_000]
     # add counties
