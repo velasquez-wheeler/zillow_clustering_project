@@ -1,19 +1,12 @@
 # About this Project
 
 ## Project Goals
-1. Discover drivers of log error of Zestimate to determine how current model could potentially be improved
-2. To cluster features to predict logerror
-3. Turn in a Jupiter notebook and multiple moduels that will clearly demostrate the precess and how it can be replicated by anyone with propper credentials to acess the Zillow database
+The goal of this project is to assess features of real estateto find meaningful clusters for use in predicting logerror.
+
 
 ## Project Description
 
-Zillow is asking our team to predict the log-error between their Zestimate and the actual sale price, given atleast three the features of a home.
-
- The log error is defined as
-
-𝑙𝑜𝑔𝑒𝑟𝑟𝑜𝑟=𝑙𝑜𝑔(𝑍𝑒𝑠𝑡𝑖𝑚𝑎𝑡𝑒 −𝑙𝑜𝑔(𝑆𝑎𝑙𝑒𝑃𝑟𝑖𝑐𝑒)
-
-In this project, you are going to predict the logerror for the year 2017.
+With low interest rates and a strong buyer's market, it is increasingly important to identify valuable real estate investment opportunities. Zillow's zestimate modeling may be improved with input from the open-source community to better predict home values and reduce logerror.
 
 ## Initial Questions
 
