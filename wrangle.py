@@ -150,7 +150,7 @@ def wrangle_zillow():
     # create $/acre
     df['dollar_per_acre'] = df.landtaxvaluedollarcnt/df.acres
     # drop unnecessary columns
-    df = drop_cols(df, ['id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt','lotsizesquarefeet','assessmentyear','yearbuilt','rawcensustractandblock','roomcnt'])
+    df = drop_cols(df, ['parcelid','id','calculatedbathnbr', 'buildingqualitytypeid','finishedsquarefeet12', 'fullbathcnt', 'heatingorsystemtypeid','heatingorsystemdesc','propertycountylandusecode', 'propertylandusetypeid','propertyzoningdesc',  'censustractandblock', 'propertylandusedesc', 'unitcnt', 'lotsizesquarefeet', 'assessmentyear','yearbuilt', 'rawcensustractandblock','roomcnt','regionidcity', 'regionidcounty', 'regionidzip'])
     # properties under 5 million USD
     df = df[df.taxvaluedollarcnt < 5_000_000]
     # add counties
@@ -159,7 +159,7 @@ def wrangle_zillow():
     df.dropna(inplace=True)
     # remove outliers
     df = df[((df.bathroomcnt <= 7) & (df.bedroomcnt <= 7) & 
-            (df.regionidzip < 100000) & 
+#             (df.regionidzip < 100000) & 
             (df.bathroomcnt >= 0) & 
             (df.bedroomcnt > 0) &
             (df.taxamount < 15000) &
