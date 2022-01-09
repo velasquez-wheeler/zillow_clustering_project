@@ -27,7 +27,7 @@ def log_error_by_fip(train):
 def data_map(train):
     plt.figure(figsize=(10,10))
     sns.scatterplot(x='longitude',y='latitude',data=train, \
-                    hue = 'landtaxvaluedollarcnt', palette = 'turbo',alpha = 0.8 )
+                    hue = 'fips', palette = 'turbo',alpha = 0.8 )
 
 # elbow method to find k for closter 1
 def cluster1_elbow_for_k(X_train_feature_cluster):
@@ -133,10 +133,11 @@ def shape(train_scaled):
 def model_compare(y_validate):
     plt.figure(figsize=(16,8))
     plt.hist(y_validate.logerror, color='blue', alpha=.5, label="Actual Log Error")
-    plt.hist(y_validate.logerror_pred_lm, color='red', alpha=.5, label="Model: LinearRegression")
     plt.hist(y_validate.logerror_pred_glm, color='yellow', alpha=.5, label="Model: TweedieRegressor")
     plt.hist(y_validate.logerror_pred_lars, color='orange', alpha=.5, label="Model: LassoLars")
     plt.hist(y_validate.logerror_pred_lm2, color='green', alpha=.5, label="Model 2nd degree Polynomial")
+    plt.hist(y_validate.logerror_pred_lm, color='red', alpha=.5, label="Model: LinearRegression")
+
     plt.title("Comparison of the models using all the features")
     plt.xlabel("Log Error")
     plt.ylabel("Number of Homes")
@@ -149,7 +150,16 @@ def RMSE_all_models(y_validate):
     RMSE_compare = RMSE_compare.reset_index()
     RMSE_compare = RMSE_compare.rename(columns={0 : "RMSE", 'index' : 'Model'})
     sns.barplot(data=RMSE_compare, x='RMSE', y='Model')
-    plt.title('2 Models do better than baseline, but not Logerror')
+    plt.title('RMSE by Model')
+    
+    
+def RMSE_baseline_model(y_validate):
+    RMSE_compare = pd.DataFrame(y_validate.mean(axis=0))
+    RMSE_compare = RMSE_compare.reset_index()
+    RMSE_compare = RMSE_compare.rename(columns={0 : "RMSE", 'index' : 'Model'})
+    sns.barplot(data=RMSE_compare, x='RMSE', y='Model')
+    plt.title('Baseline RMSE')
+    
     
 def validate_scatter(y_validate, pred_mean):
     '''
@@ -160,16 +170,15 @@ def validate_scatter(y_validate, pred_mean):
     plt.annotate("Baseline: Predict Using Mean", (-4, (pred_mean + 0.1)), size = 15)
     plt.plot(y_validate.logerror, y_validate.logerror, alpha=.5, color="grey", label='_nolegend_')
     plt.annotate("The Ideal Line: Predicted = Actual", (-3.8, -3.6),size = 15,rotation=26)
-
-    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm, 
-                alpha=.5, color="red", s=100, label="Model: LinearRegression")
     plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm2, 
                 alpha=.5, color="yellow", s=100, label="Model: Polynomial")
     plt.scatter(y_validate.logerror, y_validate.logerror_pred_lars, 
                 alpha=.5, color="green", s=100, label="Model: LassoLars")
     plt.scatter(y_validate.logerror, y_validate.logerror_pred_glm,
-                alpha=.5, color="blue",s=100,label='Model: TweedieRegressor')
-    plt.xlabel('Tax Value')
+                alpha=.3, color="blue",s=100,label='Model: TweedieRegressor')
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm, 
+                alpha=.3, color="red", s=100, label="Model: LinearRegression")
+    plt.xlabel('logerror')
     plt.ylabel('Model Predictions')
     plt.legend()
     return plt.show()    
@@ -180,6 +189,7 @@ def validate_scatter(y_validate, pred_mean):
 def best_model_vs_logerror(y_test):
     plt.figure(figsize=(18,10))
     plt.hist(y_test.logerror, color = 'blue',alpha = 0.5, label = 'Actual Log Error')
+#     plt.hist(y_test.logerror_baseline_pred_mean, color = 'green', alpha = 0.5, label = 'Baseline')
     plt.hist(y_test.logerror_pred_lm, color = 'red',alpha=0.5,label='Model: Linear Regression')
     plt.xlabel("Log Error")
     plt.ylabel("Number of Homes")
@@ -233,25 +243,25 @@ def plot_residuals(y_validate):
     
 ###### stats plots####
 def feature_cluster_stats(train_scaled):
-    sns.relplot(data = train_scaled, x = 'feature_cluster', y = 'logerror')
+    sns.relplot(data = train_scaled, x = 'feature_cluster', y = 'abs_logerror')
     return plt.show()
 
 def value_cluster_stats(train_scaled):
-    sns.relplot(data = train_scaled, x = 'value_cluster', y = 'logerror')
+    sns.relplot(data = train_scaled, x = 'value_cluster', y = 'abs_logerror')
     return plt.show()
                         
 def development_cluster_stats(train_scaled):
-    sns.relplot(data = train_scaled, x = 'development_cluster', y = 'logerror')
+    sns.relplot(data = train_scaled, x = 'development_cluster', y = 'abs_logerror')
     return plt.show()
 
 def bedroom_stats(train):
-    sns.relplot(data = train, x = 'bedroomcnt', y = 'logerror')
+    sns.relplot(data = train, x = 'bedroomcnt', y = 'abs_logerror')
     return plt.show()
 
 def bathroom_stats(train):
-    sns.relplot(data = train, x = 'bathroomcnt', y = 'logerror')
+    sns.relplot(data = train, x = 'bathroomcnt', y = 'abs_logerror')
     return plt.show()
 
 def sqft_stats(train):
-    sns.relplot(data = train, x = 'calculatedfinishedsquarefeet', y = 'logerror')
+    sns.relplot(data = train, x = 'calculatedfinishedsquarefeet', y = 'abs_logerror')
     return plt.show()

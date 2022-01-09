@@ -141,6 +141,8 @@ def wrangle_zillow():
     df = handle_missing_values(df)
     # fill lotsize
     df.lotsizesquarefeet.fillna(7313, inplace = True)
+    # create absolute logerror
+    df['abs_logerror'] = abs(df.logerror)
     # create acre feature
     df['acres'] = df.lotsizesquarefeet/43560
     # create age feature
